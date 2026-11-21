@@ -1289,6 +1289,49 @@ body.dock-open .fab{opacity:0;pointer-events:none}
 .wc-refresh{width:34px;height:34px;border-radius:11px;border:1px solid rgba(120,150,255,.26);
   background:rgba(20,30,58,.7);color:#9fb0d0;font-size:15px;cursor:pointer;transition:.18s;flex:0 0 auto}
 .wc-refresh:hover{color:#fff;border-color:rgba(143,160,200,.6);transform:rotate(90deg)}
+/* ===== 影像中国（照片地图） ===== */
+#pmapMap{position:absolute;inset:0;background:#04060f;z-index:1}
+#pmapMap .leaflet-tile{filter:saturate(.95) brightness(.9)}
+.pm-ico{background:transparent;border:none}
+.pm-stack{position:relative;width:60px;height:60px;cursor:pointer;filter:drop-shadow(0 8px 16px rgba(0,0,0,.6))}
+.pm-phs{position:absolute;inset:0}
+.pm-ph{position:absolute;inset:0;border-radius:12px;overflow:hidden;border:1.5px solid rgba(233,240,255,.85);
+  background:#0a1124 center/cover no-repeat;transform:rotate(var(--r,0deg)) translate(var(--x,0),var(--y,0));display:block}
+.pm-ph img{width:100%;height:100%;object-fit:cover;display:block}
+.pm-ph-void{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 30% 25%,rgba(106,166,255,.22),transparent 60%),
+    radial-gradient(circle at 75% 80%,rgba(157,123,255,.16),transparent 55%),#0a1124;
+  color:rgba(143,180,255,.5);font-size:16px}
+.pm-ph:last-child{transform:none;z-index:3}
+.pm-n{position:absolute;left:-8px;bottom:-8px;z-index:4;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;
+  background:rgba(6,10,24,.94);color:#eaf1ff;border:1px solid rgba(106,166,255,.55);font-style:normal}
+.pm-city{position:absolute;top:calc(100% + 10px);left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;
+  color:#d7e4ff;text-shadow:0 1px 6px #000,0 0 12px rgba(0,0,0,.95);pointer-events:none}
+.pmap-side{position:absolute;left:16px;top:130px;bottom:64px;width:250px;z-index:600;display:flex;flex-direction:column;
+  border-radius:16px;border:1px solid rgba(120,150,255,.22);background:rgba(6,10,26,.74);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);overflow:hidden}
+.pmap-side-head{padding:14px 14px 10px;border-bottom:1px solid rgba(120,150,255,.14);flex:none}
+.pmap-side-head b{font-size:15px;color:#eaf1ff;display:block;letter-spacing:.06em}
+.pmap-side-head span{font-size:11px;color:#8fa6c8}
+.pm-regions{flex:1;overflow-y:auto;padding:8px 12px 16px}
+.pm-regions::-webkit-scrollbar{width:5px}
+.pm-regions::-webkit-scrollbar-thumb{background:rgba(106,166,255,.35);border-radius:3px}
+.pm-sec{margin-top:10px}
+.pm-sec-h{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 6px}
+.pm-sec-h b{font-size:12.5px;color:#dbe6ff;letter-spacing:.08em}
+.pm-sec-h span{font-size:10.5px;color:#7f96b8}
+.pm-chips{display:flex;flex-wrap:wrap;gap:6px}
+.pm-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:10px;cursor:pointer;
+  border:1px solid rgba(120,150,255,.22);background:rgba(14,20,44,.72);color:#dfe8ff;font-size:12px;transition:.2s}
+.pm-chip i{font-style:normal;font-size:10.5px;color:#6aa6ff}
+.pm-chip:hover{border-color:rgba(106,166,255,.55);background:rgba(20,30,64,.88)}
+.pm-chip[data-zero="1"]{opacity:.55}
+.pm-empty{padding:14px 6px;color:#9fb2d4;font-size:12px;line-height:1.7}
+.pm-empty b{display:block;color:#eaf1ff;margin-bottom:4px;font-size:13px}
+#scene-pmap .terra-info{left:auto;right:190px}
+@media (max-width:760px){.pmap-side{left:10px;right:10px;width:auto;top:auto;bottom:60px;max-height:36vh}
+#scene-pmap .terra-info{display:none}}
+
 .wc-body{flex:1 1 auto;overflow-y:auto;padding:16px 20px 26px;display:flex;flex-direction:column;gap:13px}
 .wc-body::-webkit-scrollbar{width:6px}
 .wc-body::-webkit-scrollbar-thumb{background:rgba(120,150,255,.28);border-radius:3px}
@@ -1504,9 +1547,7 @@ body{background:
 .card,.wc-card{transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
 .card:hover,.wc-card:hover{transform:translateY(-2px);border-color:rgba(106,166,255,.4);box-shadow:0 14px 40px rgba(2,6,20,.55)}
 /* 世界频道瀑布流（Pinterest 式） */
-#wcBody{column-count:2;column-gap:14px;padding:2px 4px 30px;display:block}
-.wc-card{break-inside:avoid;margin:0 0 14px;display:flex;flex-direction:column}
-@media (max-width:1100px){#wcBody{column-count:1}}
+
 /* 精致空状态 */
 .wc-empty,.pf-empty{display:flex;flex-direction:column;align-items:center;gap:8px;padding:56px 20px;text-align:center}
 .wc-empty b,.pf-empty b{font-size:16px;font-weight:500;letter-spacing:.12em;color:var(--txt)}
@@ -1850,7 +1891,7 @@ body{background:
   <div class="globe-actions">
     <button class="gbtn" onclick="globeFaceChina()">🧭 回到中国</button>
     <button class="gbtn" onclick="enterTerra()">🗺 真实地表</button>
-    <button class="gbtn gbtn-3d" onclick="enterChina3D()">🏔 3D 中国</button>
+    <button class="gbtn gbtn-3d" onclick="openPmap('earth')">📷 影像中国</button>
   </div>
   <div class="globe-tip" id="globeTip"></div>
 </section>
@@ -1869,7 +1910,7 @@ body{background:
   </div>
   <div id="amapChina" style="display:none;position:absolute;inset:0"></div>
   <button class="mapamap-toggle" id="btnAmap" onclick="toggleAmapChina()" style="display:none">🗺️ 高德地图</button>
-  <button class="map3d-toggle on gbtn-3d" id="btn3d" onclick="toggleChina3D()">🌐 3D 中国</button>
+  <button class="map3d-toggle gbtn-3d" onclick="openPmap('map')">📷 影像中国</button>
   <button class="map3d-toggle mapterra-toggle" onclick="enterTerra()">🗺️ 真实地表</button>
 </section>
 
@@ -1881,7 +1922,7 @@ body{background:
     <b>COSMOS</b><span>真实地表 · 中国频道</span>
   </div>
   <div class="terra-actions">
-    <button class="gbtn gbtn-3d" onclick="enterChina3D()">🏔 3D 中国</button>
+    <button class="gbtn gbtn-3d" onclick="openPmap('terra')">📷 影像中国</button>
   </div>
   <div class="terra-info"><span class="terra-zoom" id="terraZoom">Z5</span><span id="terraLevel">省份轮廓 · 主要城市</span></div>
   <div class="prov-card" id="provCard" aria-live="polite">
@@ -1893,7 +1934,22 @@ body{background:
   <div class="terra-tip">滚轮放大逐级下钻：省 → 地级市 → 区县 → POI · 点击任意光点打开打卡抽屉 · 地图 © 高德</div>
 </section>
 
-'''<!-- 世界频道：全局左下角入口 + 全球朋友圈 -->
+'''<!-- S3.6 影像中国（照片地图：大家的照片钉在真实位置） -->
+<section class="scene" id="scene-pmap">
+  <div id="pmapMap"></div>
+  <div class="terra-brand">
+    <button class="terra-back" onclick="pmapBack()" title="返回上一层" aria-label="返回上一层">←</button>
+    <b>COSMOS</b><span>影像中国 · 照片地图</span>
+  </div>
+  <aside class="pmap-side" aria-label="照片分区">
+    <div class="pmap-side-head"><b>影像中国</b><span>大家的照片落在真实的位置上</span></div>
+    <div class="pm-regions" id="pmapRegions"><div class="pm-empty"><b>正在汇集大家的照片…</b></div></div>
+  </aside>
+  <div class="terra-info"><span class="terra-zoom" id="pmapZoom">Z4</span><span id="pmapLevel">点击照片堆 · 看当地动态</span></div>
+  <div class="terra-tip">📷 照片堆代表那里的旅行动态 · 点击打开 · 滚轮缩放探索</div>
+</section>
+
+<!-- 世界频道：全局左下角入口 + 全球朋友圈 -->
 <button class="world-btn" id="worldBtn" onclick="openWorld()" title="世界频道 · 全球朋友圈">
   <span class="wb-i">🌍</span><span class="wb-t">世界频道</span><i class="wb-b" id="wbBadge" hidden>0</i>
 </button>
@@ -2415,10 +2471,9 @@ function toggleAmapChina(){
     C3.visible=false;
     document.getElementById('china3dCanvas').style.display='none';
     document.getElementById('china3dCanvas').style.opacity='0';
-    document.getElementById('btn3d').classList.remove('on');
+    const _b3=document.getElementById('btn3d');if(_b3)_b3.classList.remove('on');
   }
   showMap2DSurface();
-  document.getElementById('btn3d').textContent='🌐 3D 中国';
 }
 
 /* ================= 3D 中国（真实省界 GeoJSON + three.js） =================
@@ -2560,8 +2615,7 @@ function fallback2dFrom3d(){
   C3.failed=true;C3.preferredMode='2d';
   document.getElementById('china3dCanvas').style.display='none';
   showMap2DSurface();
-  document.getElementById('btn3d').classList.remove('on');
-  document.getElementById('btn3d').textContent='🌐 3D 中国';
+  const _b3=document.getElementById('btn3d');if(_b3)_b3.classList.remove('on');
   toast('⚠️ 3D 地图暂不可用，已切换地图底图；点击右下角可重试 3D');
 }
 function c3AddCityMarker(city,group=C3.group){
@@ -3825,7 +3879,7 @@ function goScene(name){
   document.getElementById('scene-'+name).classList.add('on');
   scene=name;
   if(name!=='terra'){const _pc=document.getElementById('provCard');if(_pc)_pc.classList.remove('on');}
-  const inApp=['map','city','terra'].includes(name);
+  const inApp=['map','city','terra','pmap'].includes(name);
   document.getElementById('topbar').classList.toggle('on',inApp);
   document.getElementById('crumb').style.display=inApp?'flex':'none';
   document.getElementById('hud').style.display=name==='map'?'flex':'none';
@@ -3833,9 +3887,6 @@ function goScene(name){
   document.body.classList.toggle('drawer-open',name==='city');
   if(name==='city')renderCity();
   if(name==='map'&&!mapInitialized){resetMap();mapInitialized=true;}
-  if(name==='map'&&C3.preferredMode==='3d'&&!C3.visible&&!C3.failed){
-    setTimeout(()=>{if(scene==='map'&&!C3.visible)toggleChina3D();},300);
-  }
   if(has3D){
     if(name==='galaxy'){
       glCanvas.style.display='block';mode='galaxy';
@@ -3846,7 +3897,7 @@ function goScene(name){
       glCanvas.style.display='block';mode='globe';
       galaxyGroup.visible=false;globeGroup.visible=true;
       if(GLOBE.dist<60){GLOBE.dist=150;GLOBE.distT=330;}
-    }else if(name==='map'){glCanvas.style.display='none';}
+    }else if(name==='map'||name==='terra'||name==='pmap'){glCanvas.style.display='none';}
   }
 }
 
@@ -4657,6 +4708,11 @@ function enterCity(id){curCity=id;curSpot='全部';
   goScene('city');}
 function closeCity(){
   document.body.classList.remove('drawer-open');
+  if(scene==='pmap'){
+    document.getElementById('scene-city').classList.remove('on');
+    document.getElementById('fab').classList.remove('on');
+    return;
+  }
   if(scene==='terra'){
     document.getElementById('scene-city').classList.remove('on');
     document.getElementById('topbar').classList.remove('on');
@@ -6986,6 +7042,223 @@ function terraOpenPlace(c){
   }catch(e){toast(e.message||'无法打开该地点');console.warn('terraOpenPlace',e);}
 }
 
+
+/* ================= 影像中国（照片地图） =================
+   简单中国地图 · 大家的照片堆钉在真实位置 · 可缩放 · 点击看当地动态；
+   左栏按省分区，直辖市 / 特别行政区直接展开区县分区 */
+const PMAP={map:null,ready:false,busy:false,rows:[],byCity:{},from:'map',districts:{},provNames:null};
+const MUNI_SET=['北京','上海','天津','重庆','香港','澳门'];
+const MUNI_ADCODE={beijing:'110000',shanghai:'310000',tianjin:'120000',chongqing:'500000',hongkong:'810000'};
+const PROV_OF={beijing:'北京',shanghai:'上海',tianjin:'天津',chongqing:'重庆',hongkong:'香港',taipei:'中国台湾',
+ guangzhou:'广东',shenzhen:'广东',chengdu:'四川',hangzhou:'浙江',suzhou:'江苏',xian:'陕西',wuhan:'湖北',
+ nanjing:'江苏',changsha:'湖南',qingdao:'山东',jinan:'山东',kunming:'云南',lhasa:'西藏',urumqi:'新疆',
+ harbin:'黑龙江',sanya:'海南',haikou:'海南',xiamen:'福建',fuzhou:'福建',shijiazhuang:'河北',taiyuan:'山西',
+ hohhot:'内蒙古',shenyang:'辽宁',changchun:'吉林',zhengzhou:'河南',hefei:'安徽',nanchang:'江西',
+ nanning:'广西',guiyang:'贵州',xining:'青海',lanzhou:'甘肃',yinchuan:'宁夏'};
+const PM_NORM=s=>String(s||'').replace(/(特别行政区|维吾尔|壮族|回族|自治区|省|市)$/,'');
+function pmapCount(list){return (list||[]).reduce((s,p)=>s+Math.max(1,(p.media&&p.media.length)||1),0);}
+async function openPmap(from){
+  PMAP.from=from||'map';
+  if(document.body.classList.contains('drawer-open'))closeCity();
+  if(has3D){glCanvas.style.display='none';}
+  goScene('pmap');
+  pmapInit();
+  pmapLoad();
+}
+function pmapBack(){closeCity();goScene(PMAP.from);}
+function pmapInit(){
+  if(PMAP.ready)return;
+  const el=document.getElementById('pmapMap');
+  if(!el||typeof L==='undefined')return;
+  try{PMAP.districts=JSON.parse(localStorage.getItem('cosmos_muni_districts')||'{}');}catch(e){PMAP.districts={};}
+  PMAP.map=L.map(el,{zoomControl:false,attributionControl:false,minZoom:3,maxZoom:12,zoomSnap:.5});
+  L.control.zoom({position:'bottomright'}).addTo(PMAP.map);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',{maxZoom:12}).addTo(PMAP.map);
+  try{
+    L.geoJSON(CHINA_GEO_EMBED,{style:()=>({color:'rgba(106,166,255,.32)',weight:1,fillColor:'#0a1630',fillOpacity:.22})}).addTo(PMAP.map);
+  }catch(e){console.warn('影像中国省界渲染失败',e);}
+  PMAP.map.fitBounds([[17.5,73.5],[53.6,135.1]]);
+  PMAP.map.on('zoomend',()=>{const z=document.getElementById('pmapZoom');if(z)z.textContent='Z'+Math.round(PMAP.map.getZoom());});
+  PMAP.ready=true;
+  pmapProvNames();
+}
+async function pmapProvNames(){
+  if(PMAP.provNames)return;
+  try{
+    const c=localStorage.getItem('cosmos_provnames');
+    if(c){PMAP.provNames=JSON.parse(c);return;}
+    const r=await fetch('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json');
+    const j=await r.json();
+    const m={};
+    (j.features||[]).forEach(f=>{const ad=String(f.properties.adcode||'');
+      if(ad.length===6&&f.properties.name)m[ad.slice(0,2)]=PM_NORM(f.properties.name);});
+    PMAP.provNames=m;
+    try{localStorage.setItem('cosmos_provnames',JSON.stringify(m));}catch(e){}
+  }catch(e){console.warn('省份索引获取失败',e);}
+}
+function pmapProvOf(id){
+  if(PROV_OF[id])return PROV_OF[id];
+  const ad=String(AMAP_ADCODE[id]||(cityById(id)||{}).adcode||'');
+  if(PMAP.provNames&&PMAP.provNames[ad.slice(0,2)])return PMAP.provNames[ad.slice(0,2)];
+  return '其他地区';
+}
+async function pmapLoad(){
+  if(PMAP.busy)return;PMAP.busy=true;
+  const box=document.getElementById('pmapRegions');
+  try{
+    let rows=[];
+    if(cloudOK&&!offlineDemo){
+      const r=await cloud.database.from('posts').select('*')
+        .order('created_at',{ascending:false}).limit(300);
+      if(r.error)throw r.error;
+      rows=(r.data||[]).map(mapPost);
+      await mergePostThumbs(rows);
+    }
+    if(!rows.length)rows=(typeof posts!=='undefined'?posts:[]).map(p=>Object.assign({},p));
+    PMAP.rows=rows;
+    PMAP.byCity={};
+    rows.forEach(p=>{const c=cityById(p.cityId);
+      if(!c||!Number.isFinite(c.lon)||!Number.isFinite(c.lat))return;
+      (PMAP.byCity[c.id]=PMAP.byCity[c.id]||[]).push(p);});
+    pmapRenderMarkers();
+    pmapRenderSide();
+  }catch(e){console.warn('影像中国加载失败',e);
+    if(box)box.innerHTML='<div class="pm-empty"><b>照片加载失败</b>请稍后重新打开影像中国</div>';}
+  finally{PMAP.busy=false;}
+}
+function pmapStackHTML(list){
+  const city=cityById(list[0].cityId)||{name:''};
+  /* 展示优先选有内嵌缩略图的照片，匿名态也能看到真实画面 */
+  const ranked=[...list].sort((a,b)=>{
+    const ta=a.thumbs&&a.thumbs[0]&&/^inline:/.test(a.thumbs[0])?1:0;
+    const tb=b.thumbs&&b.thumbs[0]&&/^inline:/.test(b.thumbs[0])?1:0;
+    return tb-ta;});
+  const picks=ranked.slice(0,3);
+  const n=pmapCount(list);
+  const canSign=hasCloudAuth();
+  let inner='';
+  picks.forEach((p,i)=>{
+    const th=(p.thumbs&&p.thumbs[0]&&/^inline:/.test(p.thumbs[0]))?p.thumbs[0].slice(7):'';
+    const path=(p.media&&p.media[0])||p.img||'';
+    const img=th?`<img src="${th}" alt="旅友实拍">`
+      :(path&&canSign?`<img data-path="${esc(path)}" alt="旅友实拍" data-ph-title="${esc(city.name)}">`
+      :'<span class="pm-ph-void">✦</span>');
+    inner+=`<i class="pm-ph" style="--r:${(i-1)*6}deg;--x:${(i-1)*3}px;--y:${(i-1)*-2}px">${img}</i>`;
+  });
+  return `<div class="pm-stack"><div class="pm-phs">${inner}</div>
+    <b class="pm-n">${n>999?(n/1000).toFixed(1)+'k':n}</b>
+    <span class="pm-city">${esc(city.name)}</span></div>`;
+}
+let pmapLayer=null;
+function pmapRenderMarkers(){
+  if(!PMAP.map)return;
+  if(pmapLayer){pmapLayer.remove();pmapLayer=null;}
+  pmapLayer=L.layerGroup().addTo(PMAP.map);
+  Object.keys(PMAP.byCity).forEach(id=>{
+    const c=cityById(id);if(!c)return;
+    const m=L.marker([c.lat,c.lon],{icon:L.divIcon({className:'pm-ico',
+      html:pmapStackHTML(PMAP.byCity[id]),iconSize:[64,64],iconAnchor:[32,52]})});
+    m.on('click',()=>pmapOpenCity(id));
+    m.addTo(pmapLayer);
+  });
+  pmapLayer.eachLayer(m=>{const el=m.getElement();if(el)hydrateImages(el);});
+}
+function pmapOpenCity(id){
+  const c=cityById(id);if(!c)return;
+  curCity=id;curSpot='全部';
+  if(PMAP.map)PMAP.map.flyTo([c.lat,c.lon],Math.max(PMAP.map.getZoom(),8),{duration:.8});
+  document.getElementById('crumbCity').textContent=c.name;
+  document.getElementById('scene-city').classList.add('on');
+  document.body.classList.add('drawer-open');
+  document.getElementById('topbar').classList.add('on');
+  document.getElementById('crumb').style.display='flex';
+  document.getElementById('fab').classList.add('on');
+  scene='pmap';
+  renderCity();
+  toast('🛬 降落 '+c.name);
+}
+async function pmapDistricts(cityId){
+  const ad=MUNI_ADCODE[cityId];if(!ad)return null;
+  if(PMAP.districts[ad]&&PMAP.districts[ad].length)return PMAP.districts[ad];
+  try{
+    const r=await fetch('https://geo.datav.aliyun.com/areas_v3/bound/'+ad+'_full.json');
+    const j=await r.json();
+    const ds=(j.features||[]).map(f=>({name:PM_NORM(f.properties.name),
+      adcode:String(f.properties.adcode||''),
+      center:f.properties.center||f.properties.centroid||null}))
+      .filter(d=>d.name&&d.center);
+    PMAP.districts[ad]=ds;
+    try{localStorage.setItem('cosmos_muni_districts',JSON.stringify(PMAP.districts));}catch(e){}
+    return ds;
+  }catch(e){console.warn('分区数据获取失败',e);return null;}
+}
+function pmapDistStat(cityId,dists){
+  const locs=LOCS[cityId]||[];
+  const valid={};dists.forEach(d=>{valid[d.adcode]=0;});
+  let none=0,total=0;
+  (PMAP.byCity[cityId]||[]).forEach(p=>{
+    total++;
+    const loc=(p.location_id&&locs.find(l=>String(l.id)===String(p.location_id)))
+      ||locs.find(l=>l.name===p.spot);
+    const ad=loc&&loc.adcode?String(loc.adcode):'';
+    if(ad&&valid[ad]!==undefined)valid[ad]++;
+    else none++;
+  });
+  return {total,valid,none};
+}
+function pmapDist(cityId,adcode,n){
+  const ds=(PMAP.districts[MUNI_ADCODE[cityId]]||[]).find(d=>d.adcode===adcode);
+  if(ds&&ds.center&&PMAP.map)PMAP.map.flyTo([ds.center[1],ds.center[0]],9.5,{duration:.9});
+  if(n>0)pmapOpenCity(cityId);
+  else toast('这个区还没有照片，欢迎成为第一个打卡的人');
+}
+async function pmapRenderSide(){
+  const box=document.getElementById('pmapRegions');if(!box)return;
+  const groups={};
+  Object.keys(PMAP.byCity).forEach(id=>{
+    const prov=pmapProvOf(id);
+    (groups[prov]=groups[prov]||[]).push(id);
+  });
+  const provArr=Object.keys(groups).map(pn=>({name:pn,ids:groups[pn],
+    count:groups[pn].reduce((s,id)=>s+pmapCount(PMAP.byCity[id]),0)}))
+    .sort((a,b)=>b.count-a.count);
+  if(!provArr.length){
+    box.innerHTML='<div class="pm-empty"><b>还没有旅友降落</b>去发布第一张照片，你的作品会钉在真实的位置上。</div>';
+    return;
+  }
+  let html='';
+  provArr.forEach(g=>{
+    const isMuni=MUNI_SET.includes(g.name);
+    html+=`<div class="pm-sec"><div class="pm-sec-h"><b>${esc(g.name)}</b><span>${isMuni?'分区':(g.ids.length+' 城')} · ${g.count} 张</span></div><div class="pm-chips">`;
+    if(isMuni){
+      g.ids.forEach(id=>{
+        html+=`<button class="pm-chip" onclick="pmapOpenCity('${id}')">全区照片<i>${pmapCount(PMAP.byCity[id])}</i></button>`;
+      });
+      html+=`</div><div class="pm-chips" data-muni="${g.ids[0]}" id="pmDz-${g.ids[0]}"><span class="pm-empty">分区加载中…</span></div>`;
+    }else{
+      g.ids.sort((a,b)=>pmapCount(PMAP.byCity[b])-pmapCount(PMAP.byCity[a])).forEach(id=>{
+        html+=`<button class="pm-chip" onclick="pmapOpenCity('${id}')">${esc(cityById(id).name)}<i>${pmapCount(PMAP.byCity[id])}</i></button>`;
+      });
+      html+='</div>';
+    }
+    html+='</div>';
+  });
+  box.innerHTML=html;
+  for(const g of provArr){
+    if(!MUNI_SET.includes(g.name))continue;
+    const cid=g.ids[0];
+    const ds=await pmapDistricts(cid);
+    const dz=document.getElementById('pmDz-'+cid);
+    if(!dz)continue;
+    if(!ds||!ds.length){dz.innerHTML='<span class="pm-empty">分区数据暂不可用</span>';continue;}
+    try{await loadCityLocations(cid);}catch(e){console.warn('打卡点读取失败',e);}
+    const st=pmapDistStat(cid,ds);
+    dz.innerHTML=ds.map(d=>{
+      const n=st.valid[d.adcode]||0;
+      return `<button class="pm-chip" onclick="pmapDist('${cid}','${d.adcode}',${n})"${n?'':' data-zero="1"'}>${esc(d.name)}${n?`<i>${n}</i>`:''}</button>`;
+    }).join('');
+  }
+}
 
 /* ================= 世界频道（全球朋友圈） =================
    按时间汇总全站动态，每条带发布时间 + 可点击定位的城市 + 基础表情评论。 */
