@@ -1947,6 +1947,7 @@ body{background:
   </aside>
   <div class="terra-info"><span class="terra-zoom" id="pmapZoom">Z4</span><span id="pmapLevel">点击照片堆 · 看当地动态</span></div>
   <div class="terra-tip">📷 照片堆代表那里的旅行动态 · 点击打开 · 滚轮缩放探索</div>
+  <div id="pmapEmptyTip" style="display:none;position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);z-index:520;pointer-events:none;text-align:center;color:#B9C7E8;font-size:14px;letter-spacing:.12em;text-shadow:0 2px 14px rgba(0,0,0,.7)"><b style="display:block;font-size:22px;color:#EAF0FF;margin-bottom:10px">✦ 虚位以待</b>还没有旅友落下第一张照片<br><span style="opacity:.75">去发布你的打卡，成为第一个点亮影像中国的人</span></div>
 </section>
 
 <!-- 世界频道：全局左下角入口 + 全球朋友圈 -->
@@ -6383,19 +6384,11 @@ function offlineDemoPosts(){
   ];
 }
 function enableOfflineDemo(){
+  /* 云端暂不可达：只提示，不再渲染机器人假数据（宁可少而真） */
   offlineDemo=true;
   document.getElementById('cloudBanner').classList.add('on');
   const gal=document.getElementById('galaxyLive');
-  if(gal)gal.textContent='离线演示模式 · 发布上线后即为真实多人数据';
-  demoPosts=offlineDemoPosts();
-  loadDemoEngagement();
-  setInterval(()=>{
-    if(!demoPosts.length)return;
-    const p=demoPosts[Math.floor(Math.random()*demoPosts.length)];
-    const bot=DEMO_BOTS[Math.floor(Math.random()*DEMO_BOTS.length)];
-    if(!p.likes.includes(bot.id)){p.likes.push(bot.id);
-      if(scene==='city'&&p.cityId===curCity&&!feedBusy())renderFeed();}
-  },9000);
+  if(gal)gal.textContent='云端暂时无法连接 · 社区动态恢复后自动显示';
 }
 
 /* 首屏真实缩略图：取最近 3 条带图动态（匿名用内嵌缩略图，登录态走签名原图） */
@@ -7111,10 +7104,13 @@ async function pmapLoad(){
       const r=await cloud.database.from('posts').select('*')
         .order('created_at',{ascending:false}).limit(300);
       if(r.error)throw r.error;
-      rows=(r.data||[]).map(mapPost);
-      await mergePostThumbs(rows);
+    rows=(r.data||[]).map(mapPost);
+    /* 只保留真正带照片的帖子：影像中国以照片为主 */
+    rows=rows.filter(p=>(p.media&&p.media.length)||(p.img&&String(p.img).length));
+    await mergePostThumbs(rows);
     }
-    if(!rows.length)rows=(typeof posts!=='undefined'?posts:[]).map(p=>Object.assign({},p));
+    if(offlineDemo)rows=(typeof posts!=='undefined'?posts:[]).map(p=>Object.assign({},p))
+      .filter(p=>(p.media&&p.media.length)||(p.img&&String(p.img).length));
     PMAP.rows=rows;
     PMAP.byCity={};
     rows.forEach(p=>{const c=cityById(p.cityId);
@@ -7122,6 +7118,11 @@ async function pmapLoad(){
       (PMAP.byCity[c.id]=PMAP.byCity[c.id]||[]).push(p);});
     pmapRenderMarkers();
     pmapRenderSide();
+    /* 空态：还没有任何照片时给出邀请 */
+    const empty=!Object.keys(PMAP.byCity).length;
+    if(box)box.innerHTML=empty?'<div class="pm-empty"><b>✦ 虚位以待</b>还没有旅友在这里落下第一张照片<br>去发布你的打卡，成为第一个点亮影像中国的人</div>':'';
+    const tip=document.getElementById('pmapEmptyTip');
+    if(tip)tip.style.display=empty?'flex':'none';
   }catch(e){console.warn('影像中国加载失败',e);
     if(box)box.innerHTML='<div class="pm-empty"><b>照片加载失败</b>请稍后重新打开影像中国</div>';}
   finally{PMAP.busy=false;}
@@ -7140,8 +7141,10 @@ function pmapStackHTML(list){
   picks.forEach((p,i)=>{
     const th=(p.thumbs&&p.thumbs[0]&&/^inline:/.test(p.thumbs[0]))?p.thumbs[0].slice(7):'';
     const path=(p.media&&p.media[0])||p.img||'';
+    /* 内联 base64 / 直链无需签名，任何人可见；存储路径需登录会话签名 */
+    const direct=/^(inline:|data:|blob:|https?:)/.test(path);
     const img=th?`<img src="${th}" alt="旅友实拍">`
-      :(path&&canSign?`<img data-path="${esc(path)}" alt="旅友实拍" data-ph-title="${esc(city.name)}">`
+      :(path&&(direct||canSign)?`<img data-path="${esc(path)}" alt="旅友实拍" data-ph-title="${esc(city.name)}">`
       :'<span class="pm-ph-void">✦</span>');
     inner+=`<i class="pm-ph" style="--r:${(i-1)*6}deg;--x:${(i-1)*3}px;--y:${(i-1)*-2}px">${img}</i>`;
   });
